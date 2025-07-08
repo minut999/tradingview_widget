@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>TradingView Symbol Overview</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #181A20;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+    .tradingview-widget-container {
+      width: 100vw;
+      height: 100vh;
+    }
+  </style>
+  <script>
+    // Get symbol from URL query, default to AAPL
+    function getSymbol() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get('symbol') || 'AAPL';
+    }
+    // TradingView expects format: [["Apple", "AAPL|1D"]]
+    function getSymbols() {
+      const symbol = getSymbol();
+      return [
+        [symbol, symbol + '|1D']
+      ];
+    }
+    window.onload = function() {
+      const widgetScript = document.createElement('script');
+      widgetScript.type = 'text/javascript';
+      widgetScript.async = true;
+      widgetScript.src = 'https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js';
+      widgetScript.innerHTML = `
+      {
+        "lineWidth": 2,
+        "lineType": 0,
+        "chartType": "area",
+        "fontColor": "rgb(220, 220, 220)",
+        "gridLineColor": "rgba(46, 46, 46, 0.06)",
+        "volumeUpColor": "rgba(34, 171, 148, 0.5)",
+        "volumeDownColor": "rgba(247, 82, 95, 0.5)",
+        "backgroundColor": "#181A20",
+        "widgetFontColor": "#fff",
+        "upColor": "#22ab94",
+        "downColor": "#f7525f",
+        "borderUpColor": "#22ab94",
+        "borderDownColor": "#f7525f",
+        "wickUpColor": "#22ab94",
+        "wickDownColor": "#f7525f",
+        "colorTheme": "dark",
+        "isTransparent": false,
+        "locale": "en",
+        "chartOnly": false,
+        "scalePosition": "right",
+        "scaleMode": "Normal",
+        "fontFamily": "-apple-system, BlinkMacSystemFont, Trebuchet MS, Roboto, Ubuntu, sans-serif",
+        "valuesTracking": "1",
+        "changeMode": "price-and-percent",
+        "symbols": ${JSON.stringify(getSymbols())},
+        "dateRanges": [
+          "1d|1",
+          "1m|30",
+          "3m|60",
+          "12m|1D",
+          "60m|1W",
+          "all|1M"
+        ],
+        "fontSize": "10",
+        "headerFontSize": "medium",
+        "autosize": true,
+        "width": "100%",
+        "height": "100%",
+        "noTimeScale": false,
+        "hideDateRanges": false,
+        "hideMarketStatus": false,
+        "hideSymbolLogo": false
+      }
+      `;
+      document.getElementById('tv-widget').appendChild(widgetScript);
+    }
+  </script>
+</head>
+<body>
+  <div class="tradingview-widget-container" id="tv-widget"></div>
+</body>
+</html>
