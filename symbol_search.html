@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Symbol Info Widget</title>
+    <script>
+      // Get symbol from URL, default to NASDAQ:AAPL
+      function getSymbol() {
+        const params = new URLSearchParams(window.location.search);
+        return params.get('symbol') || 'NASDAQ:AAPL';
+      }
+      window.onload = function() {
+        const widgetScript = document.createElement('script');
+        widgetScript.type = 'text/javascript';
+        widgetScript.async = true;
+        widgetScript.src = 'https://s3.tradingview.com/external-embedding/embed-widget-symbol-info.js';
+        widgetScript.innerHTML = `
+        {
+          "symbol": "${getSymbol()}",
+          "colorTheme": "dark",
+          "isTransparent": false,
+          "locale": "en",
+          "width": "550"
+        }
+        `;
+        document.getElementById('tv-widget').appendChild(widgetScript);
+      }
+    </script>
+  </head>
+  <body>
+    <div class="tradingview-widget-container">
+      <div id="tv-widget" class="tradingview-widget-container__widget"></div>
+    </div>
+  </body>
+</html>
